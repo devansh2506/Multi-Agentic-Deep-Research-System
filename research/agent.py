@@ -11,8 +11,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from research.tools import tavily_search, think_tool
 from research.prompts import (
     research_agent_prompt,
-    compress_research_system_prompt,
-    compress_research_human_message
+    compress_research_system_prompt
 )
 from research.states import ResearcherState, ResearcherOutputState
 from research.functions import get_today_str
@@ -26,14 +25,14 @@ tools = [tavily_search, think_tool]
 tools_by_name = {tool.name: tool for tool in tools}
 
 # 3. Flagship Orchestration Models (Keep the heavy 70B model for complex strategic reasoning)
-model = init_chat_model(model="llama-3.3-70b-versatile", model_provider="groq", temperature=0.0)
+model = init_chat_model(model="gemini-2.5-flash", model_provider="google_genai", temperature=0.0)
 model_with_tools = model.bind_tools(tools)  # Cleanly binds using our initialized tools list
 
 # Gemini 1.5 Flash has a 1 million token context window, perfect for compressing massive amounts of research notes!
 compress_model = init_chat_model(model="gemini-1.5-flash", model_provider="google_genai", temperature=0.0)
 
 # 4. Updated the decommissioned 8B model string to the active 'llama-3.1-8b-instant' architecture
-summarization_model = init_chat_model(model="llama-3.1-8b-instant", model_provider="groq", temperature=0.0)
+summarization_model = init_chat_model(model="gemini-2.5-flash", model_provider="google_genai", temperature=0.0)
 
 tavily_client = TavilyClient()
 print("✅ Configuration updated! Tool lookup maps generated and successfully switched to llama-3.1-8b-instant.")
@@ -100,20 +99,9 @@ def compress_research(state: ResearcherState) -> dict:
     """
     system_message = compress_research_system_prompt.format(date=get_today_str())
 
-    # FIXED: Appropriately format the human message with the dynamic research topic from state
-    # The research topic is always the content of the very first message
-    research_topic = state["researcher_messages"][0].content
-    
-    human_msg = HumanMessage(
-        content=compress_research_human_message.format(
-            research_topic=research_topic
-        )
-    )
-    
     messages = (
             [SystemMessage(content=system_message)]
             + state.get("researcher_messages", [])
-            + [human_msg]
     )
 
     response = compress_model.invoke(messages)
@@ -182,4 +170,4 @@ agent_builder.add_edge("compress_research", END)
 # Compile the agent with memory
 memory = MemorySaver()
 researcher_agent = agent_builder.compile(checkpointer=memory)
-print("Researcher graph successfully built and compiled using Groq models!")
+print("Researcher graph successfully built and compiled using Gemini models!")

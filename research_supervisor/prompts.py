@@ -55,4 +55,3 @@ After each ConductResearch tool call, use think_tool to analyze the results:
 - When calling ConductResearch, provide complete standalone instructions - sub-agents can't see other agents' work
 - Do NOT use acronyms or abbreviations in your research questions, be very clear and specific
 </Scaling Rules>"""
-

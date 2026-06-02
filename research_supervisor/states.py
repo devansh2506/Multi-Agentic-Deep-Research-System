@@ -38,8 +38,8 @@ class SupervisorState(TypedDict):
 @tool
 class ConductResearch(BaseModel):
     """Tool for delegating a research task to a specialized sub-agent."""
-    research_topic: str = Field(
-        description="The topic to research. Should be a single topic, and should be described in high detail (at least a paragraph).",
+    research_brief: str = Field(
+        description="The research brief to investigate. Should be a single highly-detailed topic or sub-topic (at least a paragraph).",
     )
 
 

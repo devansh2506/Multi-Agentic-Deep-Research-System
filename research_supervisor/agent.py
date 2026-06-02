@@ -58,7 +58,7 @@ def get_notes_from_tool_calls(messages: list[BaseMessage]) -> list[str]:
 # ===== CONFIGURATION =====
 
 supervisor_tools = [ConductResearch, ResearchComplete, think_tool]
-supervisor_model = init_chat_model(model="llama-3.3-70b-versatile", model_provider="groq", temperature=0.0)
+supervisor_model = init_chat_model(model="gemini-2.5-flash", model_provider="google_genai", temperature=0.0)
 supervisor_model_with_tools = supervisor_model.bind_tools(supervisor_tools)
 
 # System constants
@@ -178,7 +178,7 @@ async def supervisor_tools(state: SupervisorState) -> Command[Literal["superviso
                 coros = [
                     researcher_agent.ainvoke({
                         "researcher_messages": [
-                            HumanMessage(content=tool_call["args"]["research_topic"])
+                            HumanMessage(content=tool_call["args"]["research_brief"])
                         ]
                     }, config={
                         "configurable": {"thread_id": f"sub_agent_{tool_call['id']}"},

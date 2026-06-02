@@ -23,7 +23,7 @@ def get_today_str() -> str:
 
 
 # 2. Initialize Groq Cloud using Llama 3.3 (blazing fast + handles structured output perfectly)
-model = init_chat_model(model="llama-3.3-70b-versatile", model_provider="groq", temperature=0.0)
+model = init_chat_model(model="gemini-2.5-flash", model_provider="google_genai", temperature=0.0)
 
 
 # ===== WORKFLOW NODES =====

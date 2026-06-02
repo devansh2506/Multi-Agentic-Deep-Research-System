@@ -25,7 +25,7 @@ def get_today_str() -> str:
 
 
 # 2. FIXED: Aligned model with Groq Cloud provider and fixed the non-existent OpenAI string typo
-summarization_model = init_chat_model(model="llama-3.3-70b-versatile", model_provider="groq", temperature=0.0)
+summarization_model = init_chat_model(model="gemini-2.5-flash", model_provider="google_genai", temperature=0.0)
 tavily_client = TavilyClient()
 
 
